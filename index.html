@@ -9,7 +9,7 @@
 ║  MEDSTATION PHARMACY CATALOG — CONFIGURATION                    ║
 ║                                                                  ║
 ║  SETUP INSTRUCTIONS:                                             ║
-║  1. Upload Medstation_Catalog_Template.xlsx to Google Sheets     ║
+║  1. Upload Medstation_Master_Pharmacy_Catalog.xlsx to Google Sheets     ║
 ║  2. Go to File → Share → Publish to Web                         ║
 ║  3. For each tab, select the tab name and "CSV" format           ║
 ║  4. Copy each URL and paste below in the matching SHEET_URL      ║
@@ -25,12 +25,12 @@
 // (Replace each placeholder with the real URL)
 // ═══════════════════════════════════════════════════════
 const SHEET_URLS = {
-  glp1:       'YOUR_CSV_URL_FOR_GLP1_TAB',
-  peptides:   'YOUR_CSV_URL_FOR_PEPTIDES_TAB',
-  testhrt:    'YOUR_CSV_URL_FOR_TESTOSTERONE_HRT_TAB',
-  other:      'YOUR_CSV_URL_FOR_OTHER_PRODUCTS_TAB',
-  states:     'YOUR_CSV_URL_FOR_STATE_COVERAGE_TAB',
-  directory:  'YOUR_CSV_URL_FOR_PHARMACY_DIRECTORY_TAB',
+  glp1:       'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpnLRYoK5cVGbLG8xipWJIFaG9Kx3VCidp-UiDpR0JNwhV77Q0lwFvTrXQfXmljQ/pub?gid=2029404378&single=true&output=csv',
+  peptides:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpnLRYoK5cVGbLG8xipWJIFaG9Kx3VCidp-UiDpR0JNwhV77Q0lwFvTrXQfXmljQ/pub?gid=2061163202&single=true&output=csv',
+  testhrt:    'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpnLRYoK5cVGbLG8xipWJIFaG9Kx3VCidp-UiDpR0JNwhV77Q0lwFvTrXQfXmljQ/pub?gid=1527884952&single=true&output=csv',
+  other:      'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpnLRYoK5cVGbLG8xipWJIFaG9Kx3VCidp-UiDpR0JNwhV77Q0lwFvTrXQfXmljQ/pub?gid=2050678885&single=true&output=csv',
+  states:     'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpnLRYoK5cVGbLG8xipWJIFaG9Kx3VCidp-UiDpR0JNwhV77Q0lwFvTrXQfXmljQ/pub?gid=49761051&single=true&output=csv',
+  directory:  'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpnLRYoK5cVGbLG8xipWJIFaG9Kx3VCidp-UiDpR0JNwhV77Q0lwFvTrXQfXmljQ/pub?gid=820785394&single=true&output=csv',
 };
 
 // Shipping costs per pharmacy (update when confirmed)
