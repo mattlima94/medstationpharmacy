@@ -25,19 +25,12 @@
 // (Replace each placeholder with the real URL)
 // ═══════════════════════════════════════════════════════
 const SHEET_URLS = {
-
-  glp1:       'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpnLRYoK5cVGbLG8xipWJIFaG9Kx3VCidp-UiDpR0JNwhV77Q0lwFvTrXQfXmljQ/pub?gid=2029404378&single=true&output=csv',
-
-  peptides:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpnLRYoK5cVGbLG8xipWJIFaG9Kx3VCidp-UiDpR0JNwhV77Q0lwFvTrXQfXmljQ/pub?gid=2061163202&single=true&output=csv',
-
-  testhrt:    'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpnLRYoK5cVGbLG8xipWJIFaG9Kx3VCidp-UiDpR0JNwhV77Q0lwFvTrXQfXmljQ/pub?gid=1527884952&single=true&output=csv',
-
-  other:      'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpnLRYoK5cVGbLG8xipWJIFaG9Kx3VCidp-UiDpR0JNwhV77Q0lwFvTrXQfXmljQ/pub?gid=2050678885&single=true&output=csv',
-
-  states:     'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpnLRYoK5cVGbLG8xipWJIFaG9Kx3VCidp-UiDpR0JNwhV77Q0lwFvTrXQfXmljQ/pub?gid=49761051&single=true&output=csv',
-
-  directory:  'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpnLRYoK5cVGbLG8xipWJIFaG9Kx3VCidp-UiDpR0JNwhV77Q0lwFvTrXQfXmljQ/pub?gid=820785394&single=true&output=csv',
-
+  glp1:       'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpnLRYoK5cVGbLG8xipWJIFaG9Kx3VCidp-UiDpR0JNwhV77Q0lwFvTrXQfXmljQ/pub?gid=476182779&single=true&output=csv',
+  peptides:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpnLRYoK5cVGbLG8xipWJIFaG9Kx3VCidp-UiDpR0JNwhV77Q0lwFvTrXQfXmljQ/pub?gid=1359568115&single=true&output=csv',
+  testhrt:    'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpnLRYoK5cVGbLG8xipWJIFaG9Kx3VCidp-UiDpR0JNwhV77Q0lwFvTrXQfXmljQ/pub?gid=148161144&single=true&output=csv',
+  other:      'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpnLRYoK5cVGbLG8xipWJIFaG9Kx3VCidp-UiDpR0JNwhV77Q0lwFvTrXQfXmljQ/pub?gid=36234013&single=true&output=csv',
+  states:     'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpnLRYoK5cVGbLG8xipWJIFaG9Kx3VCidp-UiDpR0JNwhV77Q0lwFvTrXQfXmljQ/pub?gid=1488079809&single=true&output=csv',
+  directory:  'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpnLRYoK5cVGbLG8xipWJIFaG9Kx3VCidp-UiDpR0JNwhV77Q0lwFvTrXQfXmljQ/pub?gid=2003403474&single=true&output=csv',
 };
 
 // Shipping costs per pharmacy (update when confirmed)
@@ -590,11 +583,11 @@ function parseProductSheet(rows, catalogName) {
       return isNaN(n) ? null : n;
     };
 
-    // Handle different column naming conventions across sheets
-    const cost = getNum('Pharmacy Cost') ?? getNum('Customer Price');
-    const price = getNum('Suggested Price') ?? getNum('Patient Pay Price');
+    // All tabs now use standardized column names
+    const cost = getNum('Pharmacy Cost');
+    const price = getNum('Suggested Price');
     const margin = getNum('Margin %');
-    const notes = get('Notes') || get('Protocol/Notes');
+    const notes = get('Notes');
 
     products.push({
       id: `${catalogName.substring(0,3).toUpperCase()}-${num}`,
@@ -604,7 +597,7 @@ function parseProductSheet(rows, catalogName) {
       activeIngredient: get('Active Ingredient(s)'),
       strength: get('Strength'),
       form: get('Form'),
-      qtySize: get('Vial/Qty') || get('Qty/Size') || get('Qty'),
+      qtySize: get('Qty'),
       bud: get('BUD'),
       pharmacy: get('Pharmacy'),
       pharmacyCost: cost,
