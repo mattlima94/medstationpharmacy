@@ -578,16 +578,17 @@ function parseProductSheet(rows, catalogName) {
       return idx >= 0 ? (row[idx] || '').toString().trim() : '';
     };
     const getNum = (name) => {
-      const v = get(name);
+      const v = get(name).replace(/[$,%]/g, '');
       const n = parseFloat(v);
       return isNaN(n) ? null : n;
     };
 
-    // All tabs now use standardized column names
-    const cost = getNum('Pharmacy Cost');
-    const price = getNum('Suggested Price');
-    const margin = getNum('Margin %');
-    const notes = get('Notes');
+    // All tabs now use standardized column names (with fallbacks for legacy sheets)
+    const cost = getNum('Pharmacy Cost') ?? getNum('Customer Price');
+    const price = getNum('Suggested Price') ?? getNum('Patient Pay Price');
+    let margin = getNum('Margin %');
+    if (margin != null && margin > 1) margin = margin / 100;
+    const notes = get('Notes') || get('Protocol/Notes');
 
     products.push({
       id: `${catalogName.substring(0,3).toUpperCase()}-${num}`,
@@ -597,7 +598,7 @@ function parseProductSheet(rows, catalogName) {
       activeIngredient: get('Active Ingredient(s)'),
       strength: get('Strength'),
       form: get('Form'),
-      qtySize: get('Qty'),
+      qtySize: get('Qty') || get('Qty/Size') || get('Vial/Qty'),
       bud: get('BUD'),
       pharmacy: get('Pharmacy'),
       pharmacyCost: cost,
