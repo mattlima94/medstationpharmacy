@@ -57,10 +57,10 @@ function renderCatalog(el, app) {
           <input type="checkbox" ${app.includeShipping ? 'checked' : ''} onchange="window.APP.includeShipping=this.checked;window.doRender()">
           Include shipping
         </label>
-        <label class="control-label">
+        ${app.view === 'admin' ? `<label class="control-label">
           <input type="checkbox" ${app.compareMode ? 'checked' : ''} onchange="window.APP.compareMode=this.checked;window.doRender()">
           Compare mode
-        </label>
+        </label>` : ''}
       </div>
       <select class="sort-select" onchange="window.APP.sortBy=this.value;window.doRender()">
         <option value="price-asc"${app.sortBy==='price-asc'?' selected':''}>Price: Low → High</option>
@@ -107,7 +107,7 @@ function renderCatalog(el, app) {
               <div class="detail-value">${escapeHtml(p.activeIngredient)}</div>
               <div class="detail-label">Strength</div>
               <div class="detail-value">${escapeHtml(p.strength)}</div>
-              ${p.formulaId ? `<div class="detail-label">Formula ID</div><div class="detail-value">${escapeHtml(p.formulaId)}</div>` : ''}
+              ${p.formulaId && app.view === 'admin' ? `<div class="detail-label">Formula ID</div><div class="detail-value">${escapeHtml(p.formulaId)}</div>` : ''}
             </div>
             <div>
               <div class="detail-label">State Coverage</div>

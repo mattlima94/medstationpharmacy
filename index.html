@@ -20,20 +20,12 @@
           <p id="subtitle">Loading...</p>
         </div>
       </div>
-      <div>
-        <div class="toggle-group">
-          <button class="toggle-btn" id="btn-admin" onclick="setView('admin')">Admin</button>
-          <button class="toggle-btn active" id="btn-staff" onclick="setView('staff')">Staff</button>
-        </div>
+      <div class="toggle-group" id="admin-toggle" style="display:none">
+        <button class="toggle-btn" id="btn-admin" onclick="setView('admin')">Admin</button>
+        <button class="toggle-btn active" id="btn-staff" onclick="setView('staff')">Staff</button>
       </div>
     </div>
-    <div class="tabs">
-      <button class="tab-btn active" id="tab-catalog" onclick="setTab('catalog')">Catalog</button>
-      <button class="tab-btn" id="tab-availability" onclick="setTab('availability')">Availability</button>
-      <button class="tab-btn" id="tab-compare" onclick="setTab('compare')">Compare <span id="compare-count"></span></button>
-      <button class="tab-btn" id="tab-pharmacies" onclick="setTab('pharmacies')">Pharmacies</button>
-      <button class="tab-btn" id="tab-missing" onclick="setTab('missing')">Missing Info</button>
-    </div>
+    <div class="tabs" id="tab-bar"></div>
   </div>
 </div>
 
