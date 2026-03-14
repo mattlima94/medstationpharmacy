@@ -18,6 +18,7 @@ export function render(app) {
   }
 
   if (app.tab === 'catalog') renderCatalog(el, app);
+  else if (app.tab === 'availability') renderAvailability(el, app);
   else if (app.tab === 'compare') renderCompare(el, app);
   else if (app.tab === 'pharmacies') renderPharmacies(el, app);
   else if (app.tab === 'missing') renderMissing(el, app);
@@ -126,6 +127,83 @@ function renderCatalog(el, app) {
       </div>`;
     });
   }
+  el.innerHTML = html;
+}
+
+function renderAvailability(el, app) {
+  const states = Object.keys(app.stateCoverage).sort();
+  const selectedState = app.availabilityState || '';
+
+  let html = `
+    <div class="avail-header">
+      <div class="avail-title">State Availability Lookup</div>
+      <div class="avail-desc">Select a state to see which pharmacies can ship there</div>
+    </div>
+    <select class="avail-state-picker" onchange="window.APP.availabilityState=this.value;window.doRender()">
+      <option value="">Choose a state...</option>
+      ${states.map(s => `<option value="${s}"${selectedState === s ? ' selected' : ''}>${s}</option>`).join('')}
+    </select>`;
+
+  if (!selectedState) {
+    // Show quick-tap grid of popular states
+    const popular = ['Florida', 'Texas', 'California', 'New York', 'Illinois', 'Georgia', 'Arizona', 'Colorado', 'New Jersey', 'Pennsylvania', 'Ohio', 'North Carolina'];
+    html += `
+      <div class="avail-popular-label">Popular states</div>
+      <div class="avail-popular-grid">
+        ${popular.filter(s => states.includes(s)).map(s => `<button class="avail-state-btn" onclick="window.APP.availabilityState='${s}';window.doRender()">${s}</button>`).join('')}
+      </div>`;
+  } else {
+    const coverage = app.stateCoverage[selectedState] || {};
+    const pharmacies = app.pharmacyDir;
+
+    html += `<div class="avail-results-title">${escapeHtml(selectedState)}</div>`;
+    html += '<div class="avail-grid">';
+
+    pharmacies.forEach(ph => {
+      const pc = getPharmColors(ph.name);
+      const status = coverage[ph.name] || 'Unknown';
+      const productCount = app.products.filter(p => p.pharmacy === ph.name).length;
+
+      let statusClass, statusLabel;
+      if (status === 'Yes' || status === 'Yes*') {
+        statusClass = 'avail-yes';
+        statusLabel = 'Ships here';
+      } else if (status === 'No') {
+        statusClass = 'avail-no';
+        statusLabel = 'Not available';
+      } else if (status === 'Coming Soon') {
+        statusClass = 'avail-soon';
+        statusLabel = 'Coming soon';
+      } else if (status === 'Non-sterile') {
+        statusClass = 'avail-partial';
+        statusLabel = 'Non-sterile only';
+      } else {
+        statusClass = 'avail-unknown';
+        statusLabel = 'Not confirmed';
+      }
+
+      html += `<div class="avail-card ${statusClass}">
+        <div class="avail-card-top">
+          <span class="pharm-pill" style="background:${pc.bg};color:${pc.text};border:1px solid ${pc.accent}33">${escapeHtml(ph.name)}</span>
+          <span class="avail-status-badge ${statusClass}">${statusLabel}</span>
+        </div>
+        <div class="avail-card-name">${escapeHtml(ph.fullName)}</div>
+        <div class="avail-card-detail">${productCount} products${status === 'Yes*' ? ' &middot; verify IL license' : ''}</div>
+        <div class="avail-card-detail">${escapeHtml(ph.specialty)}</div>
+        <div class="avail-card-ship">Shipping: ${escapeHtml(ph.shippingCost)}${ph.shippingEstimated ? ' (est.)' : ''}</div>
+      </div>`;
+    });
+
+    html += '</div>';
+
+    // Summary line
+    const yesCount = pharmacies.filter(ph => {
+      const s = coverage[ph.name] || '';
+      return s === 'Yes' || s === 'Yes*';
+    }).length;
+    html += `<div class="avail-summary">${yesCount} of ${pharmacies.length} pharmacies ship to ${escapeHtml(selectedState)}</div>`;
+  }
+
   el.innerHTML = html;
 }
 
