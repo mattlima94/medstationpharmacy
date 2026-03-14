@@ -62,12 +62,15 @@ function renderCatalog(el, app) {
           Compare mode
         </label>` : ''}
       </div>
-      <select class="sort-select" onchange="window.APP.sortBy=this.value;window.doRender()">
-        <option value="price-asc"${app.sortBy==='price-asc'?' selected':''}>Price: Low → High</option>
-        <option value="price-desc"${app.sortBy==='price-desc'?' selected':''}>Price: High → Low</option>
-        ${app.view === 'admin' ? `<option value="margin-desc"${app.sortBy==='margin-desc'?' selected':''}>Margin: High → Low</option>` : ''}
-        <option value="name"${app.sortBy==='name'?' selected':''}>Name A-Z</option>
-      </select>
+      <div class="controls-right">
+        <select class="sort-select" onchange="window.APP.sortBy=this.value;window.doRender()">
+          <option value="price-asc"${app.sortBy==='price-asc'?' selected':''}>Price: Low → High</option>
+          <option value="price-desc"${app.sortBy==='price-desc'?' selected':''}>Price: High → Low</option>
+          ${app.view === 'admin' ? `<option value="margin-desc"${app.sortBy==='margin-desc'?' selected':''}>Margin: High → Low</option>` : ''}
+          <option value="name"${app.sortBy==='name'?' selected':''}>Name A-Z</option>
+        </select>
+        ${app.view === 'admin' ? `<button class="export-btn" onclick="window.exportCSV()">Export CSV</button>` : ''}
+      </div>
     </div>`;
 
   if (filtered.length === 0) {

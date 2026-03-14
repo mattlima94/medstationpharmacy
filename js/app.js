@@ -80,6 +80,36 @@ window.toggleExpand = function(productId) {
   render(APP);
 };
 
+// CSV export (admin only) — exports currently filtered products
+import { getFilteredProducts } from './filters.js';
+
+window.exportCSV = function() {
+  const filtered = getFilteredProducts(APP.products, APP);
+  const headers = ['Product Name','Category','Catalog','Active Ingredient','Strength','Form','Qty/Size','Pharmacy','Pharmacy Cost','Suggested Price','Margin %','State Coverage','Notes'];
+  const rows = filtered.map(p => [
+    p.productName, p.category, p.catalog, p.activeIngredient, p.strength,
+    p.form, p.qtySize, p.pharmacy,
+    p.pharmacyCost != null ? p.pharmacyCost : '',
+    p.suggestedPrice != null ? p.suggestedPrice : '',
+    p.margin != null ? (p.margin * 100).toFixed(1) : '',
+    p.stateCoverage, p.notes,
+  ]);
+
+  const escape = v => {
+    const s = String(v ?? '');
+    return s.includes(',') || s.includes('"') || s.includes('\n') ? '"' + s.replace(/"/g, '""') + '"' : s;
+  };
+
+  const csv = [headers.map(escape).join(','), ...rows.map(r => r.map(escape).join(','))].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `medstation-catalog-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
 // Initial tab render
 renderTabs();
 
