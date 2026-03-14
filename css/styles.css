@@ -34,15 +34,17 @@ input, select, button { font-family: inherit; }
   border: 1px solid rgba(99,102,241,0.2); overflow: hidden;
 }
 .toggle-btn {
-  padding: 8px 16px; border: none; cursor: pointer; font-size: 13px;
+  padding: 12px 20px; border: none; cursor: pointer; font-size: 14px;
   font-weight: 600; background: transparent; color: var(--text-dim); transition: all 0.2s;
+  min-height: 44px;
 }
 .toggle-btn.active { background: rgba(99,102,241,0.3); color: var(--accent-light); }
-.tabs { display: flex; gap: 4px; margin-top: 16px; }
+.tabs { display: flex; gap: 4px; margin-top: 16px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .tab-btn {
-  padding: 8px 16px; border: none; border-radius: 8px 8px 0 0; cursor: pointer;
+  padding: 12px 16px; border: none; border-radius: 8px 8px 0 0; cursor: pointer;
   font-size: 13px; font-weight: 600; background: transparent; color: var(--text-dim);
   border-bottom: 2px solid transparent; transition: all 0.2s;
+  min-height: 44px; white-space: nowrap; flex-shrink: 0;
 }
 .tab-btn.active { background: var(--accent-bg); color: var(--accent-light); border-bottom-color: var(--accent); }
 
@@ -54,20 +56,22 @@ input, select, button { font-family: inherit; }
 @media (max-width: 900px) { .filters { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 600px) { .filters { grid-template-columns: 1fr; } }
 .filter-input, .filter-select {
-  padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(99,102,241,0.2);
-  background: rgba(15,22,41,0.8); color: var(--text); font-size: 14px; outline: none; width: 100%;
+  padding: 12px 14px; border-radius: 8px; border: 1px solid rgba(99,102,241,0.2);
+  background: rgba(15,22,41,0.8); color: var(--text); font-size: 16px; outline: none; width: 100%;
+  min-height: 44px;
 }
 .filter-select { cursor: pointer; }
 
 /* Controls */
 .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
-.controls-left { display: flex; gap: 12px; align-items: center; }
-.control-label { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-muted); cursor: pointer; }
-.control-label input { accent-color: var(--accent); }
+.controls-left { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.control-label { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted); cursor: pointer; min-height: 44px; }
+.control-label input { accent-color: var(--accent); width: 20px; height: 20px; }
 .result-count { font-size: 13px; color: var(--text-muted); }
 .sort-select {
-  padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(99,102,241,0.2);
-  background: rgba(15,22,41,0.8); color: var(--text-muted); font-size: 12px; cursor: pointer;
+  padding: 10px 12px; border-radius: 6px; border: 1px solid rgba(99,102,241,0.2);
+  background: rgba(15,22,41,0.8); color: var(--text-muted); font-size: 14px; cursor: pointer;
+  min-height: 44px;
 }
 
 /* Product rows */
@@ -126,7 +130,8 @@ input, select, button { font-family: inherit; }
 .compare-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px; }
 .compare-remove {
   background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3);
-  color: var(--red-text); border-radius: 4px; padding: 2px 6px; cursor: pointer; font-size: 11px;
+  color: var(--red-text); border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 13px;
+  min-height: 36px;
 }
 .compare-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; line-height: 1.3; }
 .compare-meta { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
@@ -136,7 +141,7 @@ input, select, button { font-family: inherit; }
 .compare-field-value { font-size: 13px; }
 
 /* Pharmacy directory */
-.pharm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+.pharm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr)); gap: 16px; }
 .pharm-card {
   background: var(--surface); border: 1px solid var(--border);
   border-radius: 12px; padding: 20px; border-left: 3px solid var(--accent);
@@ -186,3 +191,35 @@ input, select, button { font-family: inherit; }
 }
 .error-title { font-size: 14px; font-weight: 600; color: var(--red-text); margin-bottom: 4px; }
 .error-desc { font-size: 13px; color: var(--text-muted); }
+
+/* ═══ MOBILE ═══ */
+@media (max-width: 640px) {
+  .header { padding: 16px; }
+  .content { padding: 16px; }
+  .logo h1 { font-size: 17px; }
+  .logo p { font-size: 11px; }
+
+  /* Product rows → stacked cards */
+  .product-row { padding: 14px; }
+  .row-main { flex-wrap: wrap; gap: 8px; }
+  .product-name { white-space: normal; font-size: 15px; flex-basis: 100%; order: 1; }
+  .pharm-pill { order: 2; }
+  .product-meta { min-width: auto; text-align: left; font-size: 12px; order: 3; }
+  .badge-best { order: 0; }
+  .state-badge { order: 4; font-size: 12px; padding: 4px 8px; }
+  .price-area { order: 5; margin-left: auto; }
+  .price-main { font-size: 18px; }
+  .margin-area { order: 6; }
+
+  /* Expanded details → single column */
+  .product-details { grid-template-columns: 1fr; gap: 8px; }
+
+  /* Compare → vertical stack */
+  .compare-grid { flex-direction: column; }
+  .compare-card { max-width: none; flex: none; }
+
+  /* Controls stack */
+  .controls { flex-direction: column; align-items: stretch; }
+  .controls-left { flex-wrap: wrap; }
+  .sort-select { width: 100%; }
+}
