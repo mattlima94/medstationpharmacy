@@ -234,6 +234,41 @@ input, select, button { font-family: inherit; }
 .avail-card-ship { font-size: 12px; color: var(--text-dim); margin-top: 6px; }
 .avail-summary { font-size: 14px; color: var(--text-muted); text-align: center; padding: 12px; }
 
+/* Best option finder */
+.best-section {
+  margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border);
+}
+.best-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.best-desc { font-size: 14px; color: var(--text-muted); margin-bottom: 14px; }
+.best-cat-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.best-cat-btn {
+  padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--text-muted); font-size: 14px; font-weight: 500;
+  cursor: pointer; transition: all 0.15s; min-height: 44px;
+}
+.best-cat-btn:hover { border-color: var(--accent); color: var(--text); }
+.best-cat-btn.active { background: var(--accent-bg); border-color: var(--accent); color: var(--accent-light); font-weight: 600; }
+.best-results { display: flex; flex-direction: column; gap: 8px; }
+.best-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 16px; position: relative;
+}
+.best-card.best-cheapest { background: var(--green-bg); border-color: var(--green-border); }
+.best-recommend-badge {
+  position: absolute; top: -8px; right: 16px;
+  background: var(--green); color: #fff; padding: 2px 10px; border-radius: 4px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.03em;
+}
+.best-card-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.best-card-left { flex: 1; min-width: 0; }
+.best-card-name { font-size: 15px; font-weight: 600; margin: 8px 0 4px; }
+.best-card-meta { font-size: 13px; color: var(--text-muted); }
+.best-card-right { text-align: right; flex-shrink: 0; }
+.best-card-price { font-size: 22px; font-weight: 700; font-family: var(--mono); }
+.best-card-price.best-price { color: var(--green-text); }
+.best-card-breakdown { font-size: 11px; color: var(--text-dim); }
+.best-card-notes { font-size: 12px; color: var(--text-dim); margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
+
 /* ═══ MOBILE ═══ */
 @media (max-width: 640px) {
   .header { padding: 16px; }

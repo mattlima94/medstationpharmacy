@@ -18,6 +18,8 @@ const APP = {
   compareMode: false,
   compareItems: [],
   expandedId: null,
+  availabilityState: '',
+  availabilityCategory: '',
   products: [],
   stateCoverage: {},
   pharmacyDir: [],

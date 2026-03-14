@@ -139,7 +139,7 @@ function renderAvailability(el, app) {
       <div class="avail-title">State Availability Lookup</div>
       <div class="avail-desc">Select a state to see which pharmacies can ship there</div>
     </div>
-    <select class="avail-state-picker" onchange="window.APP.availabilityState=this.value;window.doRender()">
+    <select class="avail-state-picker" onchange="window.APP.availabilityState=this.value;window.APP.availabilityCategory='';window.doRender()">
       <option value="">Choose a state...</option>
       ${states.map(s => `<option value="${s}"${selectedState === s ? ' selected' : ''}>${s}</option>`).join('')}
     </select>`;
@@ -150,7 +150,7 @@ function renderAvailability(el, app) {
     html += `
       <div class="avail-popular-label">Popular states</div>
       <div class="avail-popular-grid">
-        ${popular.filter(s => states.includes(s)).map(s => `<button class="avail-state-btn" onclick="window.APP.availabilityState='${s}';window.doRender()">${s}</button>`).join('')}
+        ${popular.filter(s => states.includes(s)).map(s => `<button class="avail-state-btn" onclick="window.APP.availabilityState='${s}';window.APP.availabilityCategory='';window.doRender()">${s}</button>`).join('')}
       </div>`;
   } else {
     const coverage = app.stateCoverage[selectedState] || {};
@@ -202,6 +202,66 @@ function renderAvailability(el, app) {
       return s === 'Yes' || s === 'Yes*';
     }).length;
     html += `<div class="avail-summary">${yesCount} of ${pharmacies.length} pharmacies ship to ${escapeHtml(selectedState)}</div>`;
+
+    // Best Option finder
+    const availablePharmNames = pharmacies
+      .filter(ph => { const s = coverage[ph.name] || ''; return s === 'Yes' || s === 'Yes*'; })
+      .map(ph => ph.name);
+
+    const availableProducts = app.products.filter(p =>
+      availablePharmNames.includes(p.pharmacy) && p.suggestedPrice != null
+    );
+
+    const categories = [...new Set(availableProducts.map(p => p.category))].sort();
+    const selectedCat = app.availabilityCategory || '';
+
+    html += `
+      <div class="best-section">
+        <div class="best-title">Find Best Price in ${escapeHtml(selectedState)}</div>
+        <div class="best-desc">Pick a category to see the cheapest option that ships here</div>
+        <div class="best-cat-grid">
+          ${categories.map(c => `<button class="best-cat-btn${selectedCat === c ? ' active' : ''}" onclick="window.APP.availabilityCategory='${c.replace(/'/g, "\\'")}';window.doRender()">${escapeHtml(c)}</button>`).join('')}
+        </div>
+      </div>`;
+
+    if (selectedCat) {
+      const catProducts = availableProducts
+        .filter(p => p.category === selectedCat)
+        .sort((a, b) => {
+          const pa = a.suggestedPrice + (a.shipping || 0);
+          const pb = b.suggestedPrice + (b.shipping || 0);
+          return pa - pb;
+        });
+
+      if (catProducts.length === 0) {
+        html += `<div style="text-align:center;padding:24px;color:var(--text-dim);">No products in this category ship to ${escapeHtml(selectedState)}.</div>`;
+      } else {
+        html += '<div class="best-results">';
+        catProducts.forEach((p, i) => {
+          const pc = getPharmColors(p.pharmacy);
+          const total = p.suggestedPrice + (p.shipping || 0);
+          const isCheapest = i === 0;
+
+          html += `<div class="best-card${isCheapest ? ' best-cheapest' : ''}">
+            ${isCheapest ? '<div class="best-recommend-badge">Best Price</div>' : ''}
+            <div class="best-card-row">
+              <div class="best-card-left">
+                <span class="pharm-pill" style="background:${pc.bg};color:${pc.text};border:1px solid ${pc.accent}33">${escapeHtml(p.pharmacy)}</span>
+                <div class="best-card-name">${escapeHtml(p.productName)}</div>
+                <div class="best-card-meta">${escapeHtml(p.form)}${p.qtySize && p.qtySize !== '\u2014' ? ' \u00b7 ' + escapeHtml(p.qtySize) : ''}</div>
+                ${p.strength ? `<div class="best-card-meta">${escapeHtml(p.strength)}</div>` : ''}
+              </div>
+              <div class="best-card-right">
+                <div class="best-card-price${isCheapest ? ' best-price' : ''}">${formatPrice(total)}</div>
+                ${p.shipping > 0 ? `<div class="best-card-breakdown">${formatPrice(p.suggestedPrice)} + $${p.shipping} ship</div>` : ''}
+              </div>
+            </div>
+            ${p.notes ? `<div class="best-card-notes">${escapeHtml(p.notes)}</div>` : ''}
+          </div>`;
+        });
+        html += '</div>';
+      }
+    }
   }
 
   el.innerHTML = html;
